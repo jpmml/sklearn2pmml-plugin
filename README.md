@@ -1,7 +1,7 @@
 SkLearn2PMML-Plugin
 ===================
 
-The simplest way to extend [SkLearn2PMML] (https://github.com/jpmml/sklearn2pmml) package with custom transformation and model types.
+The simplest way to extend [SkLearn2PMML](https://github.com/jpmml/sklearn2pmml) package with custom transformation and model types.
 
 # Features #
 
@@ -10,7 +10,7 @@ A template project with the following layout:
 * `src/main/java` - Base directory for the corresponding Java classes.
 * `src/main/resources/META-INF/sklearn2pmml.properties` - The mappings from Python classes to Java classes.
 
-The example `com.mycompany.Aggregator` transformation implements "min", "max" and "mean" aggregation functionality in agreement with [PMML built-in functions "min", "max" and "avg"] (http://dmg.org/pmml/v4-3/BuiltinFunctions.html#min), respectively.
+The example `com.mycompany.Aggregator` transformation implements "min", "max" and "mean" aggregation functionality in agreement with [PMML built-in functions "min", "max" and "avg"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#min), respectively.
 
 # Prerequisites #
 
@@ -19,7 +19,7 @@ The example `com.mycompany.Aggregator` transformation implements "min", "max" an
 
 # Installation #
 
-Enter the project root directory and build using [Apache Maven] (http://maven.apache.org/):
+Enter the project root directory and build using [Apache Maven](http://maven.apache.org/):
 ```
 mvn clean install
 ```
@@ -55,7 +55,7 @@ iris_pipeline = PMMLPipeline([
 iris_pipeline.fit(iris_df, iris_df["Species"])
 ```
 
-Export the example pipeline to a PMML file. Use the `user_classpath` attribute to specify the location of the JAR file:
+Export the example pipeline to a PMML file. Use the `user_classpath` argument to specify the location of the JAR file:
 ```Python
 from sklearn2pmml import sklearn2pmml
 
@@ -82,8 +82,8 @@ If the PMML file is opened in text editor, then it is possible to see that the `
 
 # License #
 
-SkLearn2PMML-Plugin is licensed under the [GNU Affero General Public License (AGPL) version 3.0] (http://www.gnu.org/licenses/agpl-3.0.html). Other licenses are available on request.
+SkLearn2PMML-Plugin is licensed under the [GNU Affero General Public License (AGPL) version 3.0](http://www.gnu.org/licenses/agpl-3.0.html). Other licenses are available on request.
 
 # Additional information #
 
-Please contact [info@openscoring.io] (mailto:info@openscoring.io)
+Please contact [info@openscoring.io](mailto:info@openscoring.io)
