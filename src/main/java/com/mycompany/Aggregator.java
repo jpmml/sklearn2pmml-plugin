@@ -28,7 +28,7 @@ import org.dmg.pmml.FieldName;
 import org.dmg.pmml.OpType;
 import org.jpmml.converter.ContinuousFeature;
 import org.jpmml.converter.Feature;
-import org.jpmml.sklearn.ClassDictUtil;
+import org.jpmml.converter.FeatureUtil;
 import org.jpmml.sklearn.SkLearnEncoder;
 import sklearn.HasNumberOfFeatures;
 import sklearn.Transformer;
@@ -45,16 +45,14 @@ public class Aggregator extends Transformer implements HasNumberOfFeatures {
 	}
 
 	@Override
-	public List<Feature> encodeFeatures(List<String> ids, List<Feature> features, SkLearnEncoder encoder){
+	public List<Feature> encodeFeatures(List<Feature> features, SkLearnEncoder encoder){
 		String function = translateFunction(getFunction());
-
-		ClassDictUtil.checkSize(ids, features);
 
 		if(features.size() <= 1){
 			return features;
 		}
 
-		FieldName name = FieldName.create(function + "(" + ClassDictUtil.formatIdList(ids) + ")");
+		FieldName name = FieldName.create(function + "(" + FeatureUtil.formatFeatureList(features) + ")");
 
 		Apply apply = new Apply(function);
 
@@ -63,10 +61,6 @@ public class Aggregator extends Transformer implements HasNumberOfFeatures {
 		}
 
 		DerivedField derivedField = encoder.createDerivedField(name, OpType.CONTINUOUS, DataType.DOUBLE, apply);
-
-		ids.clear();
-
-		ids.add(name.getValue());
 
 		return Collections.<Feature>singletonList(new ContinuousFeature(encoder, derivedField));
 	}
