@@ -10,7 +10,9 @@ A template project with the following layout:
 * `src/main/java` - Base directory for the corresponding Java classes.
 * `src/main/resources/META-INF/sklearn2pmml.properties` - The mappings from Python classes to Java classes.
 
-The example `com.mycompany.Aggregator` transformation implements "min", "max" and "mean" aggregation functionality in agreement with [PMML built-in functions "min", "max" and "avg"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#min), respectively.
+Example transformer classes:
+* `com.mycompany.Aggregator`. Implements "min", "max" and "mean" aggregation functionality in agreement with [PMML built-in functions "min", "max" and "avg"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#min), respectively.
+* `com.mycompany.PowerFunction`. Implements power function in agreement with the [PMML built-in function "pow"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#math).
 
 # Prerequisites #
 
@@ -43,12 +45,12 @@ from sklearn2pmml import PMMLPipeline
 from sklearn2pmml.decoration import ContinuousDomain
 from sklearn_pandas import DataFrameMapper
 from sklearn.linear_model import LogisticRegression
-from com.mycompany import Aggregator
+from com.mycompany import Aggregator, PowerFunction
 
 iris_pipeline = PMMLPipeline([
 	("mapper", DataFrameMapper([
 		(["Sepal.Length", "Petal.Length"], [ContinuousDomain(), Aggregator(function = "mean")]),
-		(["Sepal.Width", "Petal.Width"], [ContinuousDomain(), Aggregator(function = "mean")])
+		(["Sepal.Width", "Petal.Width"], [ContinuousDomain(), PowerFunction(power = 2)])
 	])),
 	("classifier", LogisticRegression())
 ])
@@ -62,22 +64,42 @@ from sklearn2pmml import sklearn2pmml
 sklearn2pmml(iris_pipeline, "Iris.pmml", user_classpath = ["/path/to/sklearn2pmml-plugin/target/sklearn2pmml-plugin-1.0-SNAPSHOT.jar"])
 ```
 
-If the PMML file is opened in text editor, then it is possible to see that the `TransformationDictionary` element has been populated with two `DerivedField` elements that correspond to the `com.mycompany.Aggregator` transformation:
+The PMML representation of transformers varies depending on the "composition" of the pipeline. In the example example, the `com.mycompany.Aggregator` transformer is represented as a `DerivedField` element, whereas the `com.mycompany.PowerFunction` transformer is represented as a `NumericPredictor@exponent` attribute:
 ```XML
-<TransformationDictionary>
-	<DerivedField name="avg(Sepal.Length, Petal.Length)" optype="continuous" dataType="double">
-		<Apply function="avg">
-			<FieldRef field="Sepal.Length"/>
-			<FieldRef field="Petal.Length"/>
-		</Apply>
-	</DerivedField>
-	<DerivedField name="avg(Sepal.Width, Petal.Width)" optype="continuous" dataType="double">
-		<Apply function="avg">
-			<FieldRef field="Sepal.Width"/>
-			<FieldRef field="Petal.Width"/>
-		</Apply>
-	</DerivedField>
-</TransformationDictionary>
+<PMML xmlns="http://www.dmg.org/PMML-4_3" version="4.3">
+	<TransformationDictionary>
+		<DerivedField name="avg(Sepal.Length, Petal.Length)" optype="continuous" dataType="double">
+			<Apply function="avg">
+				<FieldRef field="Sepal.Length"/>
+				<FieldRef field="Petal.Length"/>
+			</Apply>
+		</DerivedField>
+	</TransformationDictionary>
+	<RegressionModel functionName="classification" normalizationMethod="softmax">
+		<MiningSchema>
+			<MiningField name="Species" usageType="target"/>
+			<MiningField name="Sepal.Width" missingValueTreatment="asIs"/>
+			<MiningField name="Petal.Width" missingValueTreatment="asIs"/>
+			<MiningField name="Sepal.Length" missingValueTreatment="asIs"/>
+			<MiningField name="Petal.Length" missingValueTreatment="asIs"/>
+		</MiningSchema>
+		<RegressionTable intercept="0.15312185052146582" targetCategory="setosa">
+			<NumericPredictor name="avg(Sepal.Length, Petal.Length)" coefficient="-1.5862823598313542"/>
+			<NumericPredictor name="Sepal.Width" exponent="2" coefficient="0.864623482260917"/>
+			<NumericPredictor name="Petal.Width" exponent="2" coefficient="-1.7337433442275574"/>
+		</RegressionTable>
+		<RegressionTable intercept="-0.41196434155188394" targetCategory="versicolor">
+			<NumericPredictor name="avg(Sepal.Length, Petal.Length)" coefficient="1.6174796043315152"/>
+			<NumericPredictor name="Sepal.Width" exponent="2" coefficient="-0.5854978099617918"/>
+			<NumericPredictor name="Petal.Width" exponent="2" coefficient="-1.4870454407048939"/>
+		</RegressionTable>
+		<RegressionTable intercept="-1.0913325888211003" targetCategory="virginica">
+			<NumericPredictor name="avg(Sepal.Length, Petal.Length)" coefficient="-0.3554755078012205"/>
+			<NumericPredictor name="Sepal.Width" exponent="2" coefficient="-0.569705884824069"/>
+			<NumericPredictor name="Petal.Width" exponent="2" coefficient="2.9003699714343223"/>
+		</RegressionTable>
+	</RegressionModel>
+</PMML>
 ```
 
 # License #

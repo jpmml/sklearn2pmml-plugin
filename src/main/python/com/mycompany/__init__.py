@@ -21,3 +21,16 @@ class Aggregator(TransformerMixin):
 		elif self.function == "mean":
 			return numpy.mean(X, axis = 1)
 		return X
+
+class PowerFunction(TransformerMixin):
+
+	def __init__(self, power):
+		if not isinstance(power, int):
+			raise ValueError("Power {0} is not an integer".format(power))
+		self.power = power
+
+	def fit(self, X, y = None):
+		return self
+
+	def transform(self, X, y = None):
+		return numpy.power(X, self.power)
