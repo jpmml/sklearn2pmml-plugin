@@ -13,6 +13,7 @@ A template project with the following layout:
 Example transformer classes:
 * `com.mycompany.Aggregator`. Implements "min", "max" and "mean" aggregation functionality in agreement with [PMML built-in functions "min", "max" and "avg"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#min), respectively.
 * `com.mycompany.PowerFunction`. Implements power function in agreement with the [PMML built-in function "pow"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#math).
+* `com.mycompany.StringNormalizer` - Implements string normalization (conversion to lower/uppercase followed by trimming whitespace) in agreement with [PMML built-in functions "uppercase", "lowercase" and "trimBlanks"](http://dmg.org/pmml/v4-3/BuiltinFunctions.html#uppercase).
 
 # Prerequisites #
 

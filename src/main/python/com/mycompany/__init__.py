@@ -34,3 +34,27 @@ class PowerFunction(TransformerMixin):
 
 	def transform(self, X, y = None):
 		return numpy.power(X, self.power)
+
+class StringNormalizer(TransformerMixin):
+
+	def __init__(self, function = None, trim_blanks = True):
+		functions = ["lowercase", "uppercase"]
+		if (function is not None) and (function not in functions):
+			raise ValueError("Function {0} not in {1}".format(function, functions))
+		self.function = function
+		self.trim_blanks = trim_blanks
+
+	def fit(self, X, y = None):
+		return self
+
+	def transform(self, X, y = None):
+		if hasattr(X, "values"):
+			X = X.values
+		X = X.astype("U")
+		if self.function == "lowercase":
+			X = numpy.char.lower(X)
+		elif self.function == "uppercase":
+			X = numpy.char.upper(X)
+		if self.trim_blanks:
+			X = numpy.char.strip(X)
+		return X
