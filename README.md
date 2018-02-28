@@ -79,10 +79,10 @@ The PMML representation of transformers varies depending on the "composition" of
 	<RegressionModel functionName="classification" normalizationMethod="softmax">
 		<MiningSchema>
 			<MiningField name="Species" usageType="target"/>
-			<MiningField name="Sepal.Width" missingValueTreatment="asIs"/>
-			<MiningField name="Petal.Width" missingValueTreatment="asIs"/>
-			<MiningField name="Sepal.Length" missingValueTreatment="asIs"/>
-			<MiningField name="Petal.Length" missingValueTreatment="asIs"/>
+			<MiningField name="Sepal.Width"/>
+			<MiningField name="Petal.Width"/>
+			<MiningField name="Sepal.Length"/>
+			<MiningField name="Petal.Length"/>
 		</MiningSchema>
 		<RegressionTable intercept="0.15312185052146582" targetCategory="setosa">
 			<NumericPredictor name="avg(Sepal.Length, Petal.Length)" coefficient="-1.5862823598313542"/>
