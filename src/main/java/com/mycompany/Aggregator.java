@@ -52,7 +52,7 @@ public class Aggregator extends Transformer implements HasNumberOfFeatures {
 			return features;
 		}
 
-		FieldName name = FieldName.create(function + "(" + FeatureUtil.formatFeatureList(features) + ")");
+		FieldName name = FeatureUtil.createName(function, features);
 
 		Apply apply = new Apply(function);
 
